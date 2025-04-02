@@ -1,6 +1,6 @@
 {
-  "short_name": "admin dashboard",
-  "name": "admin dashboard",
+  "short_name": "admin panel",
+  "name": "admin panel",
   "icons": [
     {
       "src": "favicon.svg",
