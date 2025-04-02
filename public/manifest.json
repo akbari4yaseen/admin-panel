@@ -1,9 +1,9 @@
 {
-  "short_name": "refine base example",
-  "name": "refine base example",
+  "short_name": "admin dashboard",
+  "name": "admin dashboard",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "favicon.svg",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     }

@@ -4,16 +4,11 @@ import dayjs from "dayjs";
 import Grid from "@mui/material/Grid2";
 import { NumberField } from "@refinedev/mui";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
-import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
-import {
-  DailyOrders,
-  DailyRevenue,
-  NewCustomers,
-} from "../../components/dashboard";
+import { DailyRevenue } from "../../components/dashboard";
 import { TrendIcon } from "../../components/icons";
 import { Card, RefineListView } from "../../components";
 import type { IOrderChart, ISalesChart } from "../../interfaces";
@@ -173,80 +168,6 @@ export const DashboardPage: React.FC = () => {
             }}
           >
             <DailyRevenue data={dailyRevenueData?.data.data || []} />
-          </Card>
-        </Grid>
-        <Grid
-          size={{
-            xs: 24,
-            sm: 24,
-            md: 24,
-            lg: 12,
-            xl: 7,
-          }}
-          sx={{
-            height: "264px",
-          }}
-        >
-          <Card
-            title={t("dashboard.dailyOrders.title")}
-            icon={<ShoppingBagOutlinedIcon />}
-            sx={{
-              ".MuiCardContent-root:last-child": {
-                paddingBottom: "24px",
-              },
-            }}
-            cardContentProps={{
-              sx: {
-                height: "208px",
-              },
-            }}
-            cardHeaderProps={{
-              action: (
-                <TrendIcon
-                  trend={dailyOrders?.trend}
-                  text={<NumberField value={dailyOrders?.trend || 0} />}
-                />
-              ),
-            }}
-          >
-            <DailyOrders data={dailyOrders?.data || []} />
-          </Card>
-        </Grid>
-        <Grid
-          size={{
-            xs: 24,
-            sm: 24,
-            md: 24,
-            lg: 12,
-            xl: 7,
-          }}
-          sx={{
-            height: "264px",
-          }}
-        >
-          <Card
-            title={t("dashboard.newCustomers.title")}
-            icon={<AccountCircleOutlinedIcon />}
-            sx={{
-              ".MuiCardContent-root:last-child": {
-                paddingBottom: "24px",
-              },
-            }}
-            cardContentProps={{
-              sx: {
-                height: "208px",
-              },
-            }}
-            cardHeaderProps={{
-              action: (
-                <TrendIcon
-                  trend={newCustomers?.trend}
-                  text={<NumberField value={newCustomers?.trend || 0} />}
-                />
-              ),
-            }}
-          >
-            <NewCustomers data={newCustomers?.data || []} />
           </Card>
         </Grid>
       </Grid>
