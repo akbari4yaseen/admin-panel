@@ -4,7 +4,7 @@ export const AppLogoIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg
     id="Layer_1"
     data-name="app logo"
-    height="24"
+    width="28"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 165.76 165.82"
     {...props}
