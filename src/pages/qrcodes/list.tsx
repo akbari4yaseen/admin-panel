@@ -5,6 +5,7 @@ import {
   RefineListView,
   QRcodeListTable,
   QRcodeListCard,
+  QRcodeDrawerForm,
 } from "../../components";
 import { useTranslate, useGo, useNavigation } from "@refinedev/core";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
@@ -29,6 +30,8 @@ export const QRCodeList: React.FC<PropsWithChildren> = ({ children }) => {
     const view = localStorage.getItem("qrcodes-view") as View;
     return view || "table";
   });
+
+  const [createDrawerOpen, setCreateDrawerOpen] = useState(false);
 
   const go = useGo();
   const { replace } = useNavigation();
@@ -77,9 +80,7 @@ export const QRCodeList: React.FC<PropsWithChildren> = ({ children }) => {
             key="create"
             size="medium"
             sx={{ height: "40px" }}
-            onClick={() => {
-              // open create drawer 
-            }}
+            onClick={() => setCreateDrawerOpen(true)}
           >
             {t("qrcodes.actions.add")}
           </CreateButton>,
@@ -88,6 +89,12 @@ export const QRCodeList: React.FC<PropsWithChildren> = ({ children }) => {
         {view === "table" && <QRcodeListTable />}
         {view === "card" && <QRcodeListCard {...dataGrid} />}
       </RefineListView>
+      {/* Create Drawer */}
+      <QRcodeDrawerForm
+        open={createDrawerOpen}
+        action="create"
+        onClose={() => setCreateDrawerOpen(false)}
+      />
       {children}
     </>
   );
