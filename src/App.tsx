@@ -8,7 +8,7 @@ import {
 } from "@refinedev/mui";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import CssBaseline from "@mui/material/CssBaseline";
-import dataProvider from "@refinedev/simple-rest";
+
 import routerProvider, {
   CatchAllNavigate,
   NavigateToResource,
@@ -19,30 +19,29 @@ import { BrowserRouter, Routes, Route, Outlet } from "react-router";
 import { useTranslation } from "react-i18next";
 
 import Dashboard from "@mui/icons-material/Dashboard";
-
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import QrCodeIcon from "@mui/icons-material/QrCode";
 import Box from "@mui/material/Box";
+
 import { authProvider } from "./authProvider";
 import { DashboardPage } from "./pages/dashboard";
-import QrCodeIcon from "@mui/icons-material/QrCode";
+import { QRCodeList } from "./pages/qrcodes"; // ⬅️ Added QR Code List
 import { CustomerShow, CustomerList } from "./pages/customers";
-
 import { AuthPage } from "./pages/auth";
-
-import { ProductEdit, ProductList, ProductCreate } from "./pages/products";
 
 import { ColorModeContextProvider } from "./contexts";
 import { Header, Title } from "./components";
 import { useAutoLoginForDemo } from "./hooks";
 
-const API_URL = "https://api.finefoods.refine.dev";
+import { dataProvider } from "./providers/data-provider";
+
+const QRCODES_API_URL = "http://localhost:8093/api/v1/qrcodes";
+const ADMIN_USERS_API_URL = "http://localhost:8094/api/v1/admin-users";
 
 const App: React.FC = () => {
-  // This hook is used to automatically login the user.
-  // We use this hook to skip the login page and demonstrate the application more quickly.
   const { loading } = useAutoLoginForDemo();
-
   const { t, i18n } = useTranslation();
+
   const i18nProvider = {
     translate: (key: string, params: object) => t(key, params),
     changeLocale: (lang: string) => i18n.changeLanguage(lang),
@@ -62,7 +61,7 @@ const App: React.FC = () => {
           <RefineSnackbarProvider>
             <Refine
               routerProvider={routerProvider}
-              dataProvider={dataProvider(API_URL)}
+              dataProvider={dataProvider}
               authProvider={authProvider}
               i18nProvider={i18nProvider}
               options={{
@@ -82,14 +81,12 @@ const App: React.FC = () => {
                   },
                 },
                 {
-                  name: "products",
-                  list: "/products",
-                  create: "/products/new",
-                  edit: "/products/:id/edit",
-                  show: "/products/:id",
+                  name: "qrcodes",
+                  list: "/qrcodes",
                   meta: {
                     label: "QR Codes",
                     icon: <QrCodeIcon />,
+                    dataProviderName: "qrcodes",
                   },
                 },
                 {
@@ -99,6 +96,7 @@ const App: React.FC = () => {
                   meta: {
                     label: "Users",
                     icon: <AccountCircleOutlinedIcon />,
+                    dataProviderName: "users", // Specify which data provider to use
                   },
                 },
               ]}
@@ -126,18 +124,17 @@ const App: React.FC = () => {
                 >
                   <Route index element={<DashboardPage />} />
 
+                  {/* QR Codes List Route */}
                   <Route
-                    path="/products"
+                    path="/qrcodes"
                     element={
-                      <ProductList>
+                      <QRCodeList>
                         <Outlet />
-                      </ProductList>
+                      </QRCodeList>
                     }
-                  >
-                    <Route path=":id/edit" element={<ProductEdit />} />
-                    <Route path="new" element={<ProductCreate />} />
-                  </Route>
+                  />
 
+                  {/* Customers */}
                   <Route
                     path="/customers"
                     element={
@@ -150,6 +147,7 @@ const App: React.FC = () => {
                   </Route>
                 </Route>
 
+                {/* Authentication Routes */}
                 <Route
                   element={
                     <Authenticated key="auth-pages" fallback={<Outlet />}>

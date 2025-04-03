@@ -1,23 +1,32 @@
 import React, { type PropsWithChildren, useState } from "react";
-import { useTranslate, useGo, useNavigation, useList } from "@refinedev/core";
-import { CreateButton, useDataGrid } from "@refinedev/mui";
+import { useDataGrid, CreateButton } from "@refinedev/mui";
+
+import {
+  RefineListView,
+  ProductListTable,
+  ProductListCard,
+} from "../../components";
+import { useTranslate, useGo, useNavigation } from "@refinedev/core";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
 import BorderAllOutlinedIcon from "@mui/icons-material/BorderAllOutlined";
 import { useLocation } from "react-router";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
-import {
-  ProductListTable,
-  ProductListCard,
-  RefineListView,
-} from "../../components";
-import type { ICategory, IProduct } from "../../interfaces";
+
+interface IQRCode {
+  id: number;
+  token: string;
+  url: string;
+  image: string;
+  valid: boolean;
+  created_at: string;
+}
 
 type View = "table" | "card";
 
-export const ProductList = ({ children }: PropsWithChildren) => {
+export const QRCodeList: React.FC<PropsWithChildren> = ({ children }) => {
   const [view, setView] = useState<View>(() => {
-    const view = localStorage.getItem("product-view") as View;
+    const view = localStorage.getItem("qrcodes-view") as View;
     return view || "table";
   });
 
@@ -27,30 +36,22 @@ export const ProductList = ({ children }: PropsWithChildren) => {
   const { createUrl } = useNavigation();
   const t = useTranslate();
 
-  const dataGrid = useDataGrid<IProduct>({
-    resource: "products",
+  const dataGrid = useDataGrid<IQRCode>({
+    resource: "qrcodes",
     pagination: {
-      pageSize: 12,
+      pageSize: 10,
     },
   });
-
-  const { data: categoriesData } = useList<ICategory>({
-    resource: "categories",
-    pagination: {
-      mode: "off",
-    },
-  });
-  const categories = categoriesData?.data || [];
 
   const handleViewChange = (
     _e: React.MouseEvent<HTMLElement>,
-    newView: View,
+    newView: View
   ) => {
     // remove query params (pagination, filters, etc.) when changing view
     replace("");
 
     setView(newView);
-    localStorage.setItem("product-view", newView);
+    localStorage.setItem("qrcodes-view", newView);
   };
 
   return (
@@ -78,7 +79,7 @@ export const ProductList = ({ children }: PropsWithChildren) => {
             sx={{ height: "40px" }}
             onClick={() => {
               return go({
-                to: `${createUrl("products")}`,
+                to: `${createUrl("qrcodes")}`,
                 query: {
                   to: pathname,
                 },
@@ -89,16 +90,12 @@ export const ProductList = ({ children }: PropsWithChildren) => {
               });
             }}
           >
-            {t("products.actions.add")}
+            {t("qrcodes.actions.add")}
           </CreateButton>,
         ]}
       >
-        {view === "table" && (
-          <ProductListTable {...dataGrid} categories={categories} />
-        )}
-        {view === "card" && (
-          <ProductListCard {...dataGrid} categories={categories} />
-        )}
+        {view === "table" && <ProductListTable />}
+        {view === "card" && <ProductListCard {...dataGrid} />}
       </RefineListView>
       {children}
     </>

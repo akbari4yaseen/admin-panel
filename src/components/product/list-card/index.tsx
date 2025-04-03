@@ -2,9 +2,9 @@ import { useMemo } from "react";
 import { useGo, useNavigation, useTranslate } from "@refinedev/core";
 import { NumberField, type UseDataGridReturnType } from "@refinedev/mui";
 import Typography from "@mui/material/Typography";
-import type { ICategory, IProduct } from "../../../interfaces";
+import type { ICategory, IQRCode } from "../../../interfaces";
 import { useLocation } from "react-router";
-import { ProductStatus } from "../status";
+import { QRCodeStatus } from "../status";
 import Grid from "@mui/material/Grid2";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -19,9 +19,7 @@ import Box from "@mui/material/Box";
 import TablePagination from "@mui/material/TablePagination";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
-type Props = {
-  categories: ICategory[];
-} & UseDataGridReturnType<IProduct>;
+type Props = {} & UseDataGridReturnType<IQRCode>;
 
 export const ProductListCard = (props: Props) => {
   const go = useGo();
@@ -40,7 +38,7 @@ export const ProductListCard = (props: Props) => {
     });
 
     const filterValues = filter?.value?.map((value: string | number) =>
-      Number(value),
+      Number(value)
     );
 
     return {
@@ -50,25 +48,6 @@ export const ProductListCard = (props: Props) => {
   }, [props.filters]).value;
 
   const hasCategoryFilter = categoryFilters?.length > 0;
-
-  const handleOnTagClick = (categoryId: number) => {
-    const newFilters = categoryFilters;
-    const hasCurrentFilter = newFilters.includes(categoryId);
-    if (hasCurrentFilter) {
-      newFilters.splice(newFilters.indexOf(categoryId), 1);
-    } else {
-      newFilters.push(categoryId);
-    }
-
-    props.setFilters([
-      {
-        field: "category.id",
-        operator: "in",
-        value: newFilters,
-      },
-    ]);
-    props.setCurrent(1);
-  };
 
   return (
     <>
@@ -91,25 +70,6 @@ export const ProductListCard = (props: Props) => {
             props.setCurrent(1);
           }}
         />
-        {props.categories.map((category) => {
-          return (
-            <Chip
-              key={category.id}
-              label={category.title}
-              color={
-                categoryFilters?.includes(category.id) ? "primary" : undefined
-              }
-              sx={{
-                color: categoryFilters?.includes(category.id)
-                  ? "white"
-                  : undefined,
-              }}
-              onClick={() => {
-                handleOnTagClick(category.id);
-              }}
-            />
-          );
-        })}
       </Stack>
       <Divider />
       <Grid
@@ -120,10 +80,6 @@ export const ProductListCard = (props: Props) => {
         }}
       >
         {products?.map((product) => {
-          const category = props.categories.find(
-            (c) => c.id === product.category.id,
-          );
-
           return (
             <Grid
               key={product.id}
@@ -160,8 +116,8 @@ export const ProductListCard = (props: Props) => {
                     <CardMedia
                       component="img"
                       height="160"
-                      image={product.images[0]?.url}
-                      alt={product.name}
+                      image={product.image}
+                      alt={product.token}
                     />
                     <Button
                       className="view-button"
@@ -194,29 +150,6 @@ export const ProductListCard = (props: Props) => {
                     </Button>
                   </Box>
 
-                  <CardContent>
-                    <Stack
-                      mb="8px"
-                      direction="row"
-                      justifyContent="space-between"
-                    >
-                      <Typography variant="body1" fontWeight={500}>
-                        {product.name}
-                      </Typography>
-                      <NumberField
-                        variant="body1"
-                        fontWeight={500}
-                        value={product.price}
-                        options={{
-                          style: "currency",
-                          currency: "USD",
-                        }}
-                      />
-                    </Stack>
-                    <Typography color="text.secondary">
-                      {product.description}
-                    </Typography>
-                  </CardContent>
                   <CardActions
                     sx={{
                       justifyContent: "space-between",
@@ -232,9 +165,9 @@ export const ProductListCard = (props: Props) => {
                       sx={{
                         backgroundColor: "transparent",
                       }}
-                      label={category?.title}
+                      label={"category"}
                     />
-                    <ProductStatus size="small" value={product.isActive} />
+                    <QRCodeStatus size="small" value={product.valid} />
                   </CardActions>
                 </CardActionArea>
               </Card>
@@ -252,7 +185,7 @@ export const ProductListCard = (props: Props) => {
         count={props.dataGridProps.rowCount}
         page={props.dataGridProps.paginationModel?.page || 0}
         rowsPerPage={props.dataGridProps.paginationModel?.pageSize || 12}
-        rowsPerPageOptions={[12, 24, 48, 96]}
+        rowsPerPageOptions={[10, 24, 48, 96]}
         onRowsPerPageChange={(e) => {
           props.setPageSize(+e.target.value);
         }}

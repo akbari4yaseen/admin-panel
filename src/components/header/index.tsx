@@ -51,7 +51,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = () => {
   const t = useTranslate();
 
   const { refetch: refetchOrders } = useList<IOrder>({
-    resource: "orders",
+    resource: "qrcodes",
     config: {
       filters: [{ field: "q", operator: "contains", value }],
     },
@@ -134,8 +134,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = () => {
   useEffect(() => {
     setOptions([]);
     refetchOrders();
-    refetchCouriers();
-    refetchStores();
+   
   }, [value, refetchOrders, refetchCouriers, refetchStores]);
 
   return (

@@ -383,12 +383,12 @@
       "mainTotal": "MAIN TOTAL"
     }
   },
-  "products": {
-    "products": "Products",
+  "qrcodes": {
+    "qrcodes": "QRcodes",
     "titles": {
-      "list": "Products",
-      "create": "Create Product",
-      "edit": "Edit Product"
+      "list": "QR Codes",
+      "create": "Create QR code",
+      "edit": "Edit QR code"
     },
     "fields": {
       "id": "ID",

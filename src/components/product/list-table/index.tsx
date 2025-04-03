@@ -1,40 +1,68 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useGo, useNavigation, useTranslate } from "@refinedev/core";
-import { NumberField, type UseDataGridReturnType } from "@refinedev/mui";
+import { useDataGrid } from "@refinedev/mui";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
-import type { ICategory, IProduct } from "../../../interfaces";
+import type { IQRCode } from "../../../interfaces";
 import { useLocation } from "react-router";
 import IconButton from "@mui/material/IconButton";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { ProductStatus } from "../status";
+import { QRCodeStatus } from "../status";
+import { Dialog, DialogContent } from "@mui/material";
 
-type Props = {
-  categories: ICategory[];
-} & UseDataGridReturnType<IProduct>;
-
-export const ProductListTable = (props: Props) => {
+export const ProductListTable = () => {
   const go = useGo();
   const { pathname } = useLocation();
   const { editUrl } = useNavigation();
   const t = useTranslate();
 
-  const columns = useMemo<GridColDef<IProduct>[]>(
+  const [open, setOpen] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  // Fetching data using useDataGrid with proper pagination and queryOptions
+  const { dataGridProps } = useDataGrid<IQRCode>({
+    resource: "qrcodes",
+    dataProviderName: "qrcodes",
+    pagination: { pageSize: 10 }, // Ensuring pagination is set up
+    queryOptions: {
+      select: (data) => ({
+        data: data.data?.qrcodes ?? [], // Default to empty array if no data
+        total: data.data?.total ?? 0, // Default total count to 0
+      }),
+    },
+  });
+
+  // Ensure rows are always an array
+  const rows = Array.isArray(dataGridProps?.rows) ? dataGridProps.rows : [];
+
+  const handleOpen = (image: string | null) => {
+    if (image) {
+      setSelectedImage(image);
+      setOpen(true);
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedImage(null);
+  };
+
+  const columns = useMemo<GridColDef<IQRCode>[]>(
     () => [
       {
         field: "id",
-        headerName: "ID #",
-        description: "ID #",
+        headerName: "ID",
+        description: "ID",
         width: 52,
         display: "flex",
         renderCell: function render({ row }) {
-          return <Typography>#{row.id}</Typography>;
+          return <Typography>{row.id}</Typography>;
         },
       },
       {
-        field: "avatar",
-        headerName: t("products.fields.images.label"),
+        field: "image",
+        headerName: t("qrcodes.fields.images.label"),
         display: "flex",
         renderCell: function render({ row }) {
           return (
@@ -44,8 +72,10 @@ export const ProductListTable = (props: Props) => {
                 width: 32,
                 height: 32,
               }}
-              src={row.images[0]?.thumbnailUrl || row.images[0]?.url}
-              alt={row.name}
+              src={row.image}
+              alt="QR Code"
+              style={{ width: 50, height: 50, cursor: "pointer" }}
+              onClick={() => handleOpen(row.image)}
             />
           );
         },
@@ -56,26 +86,36 @@ export const ProductListTable = (props: Props) => {
       },
       {
         field: "token",
-        headerName: t("products.fields.token"),
-        width: 200,
-        sortable: false,
-      },
-      {
-        field: "url",
-        headerName: t("products.fields.url"),
+        headerName: t("qrcodes.fields.token"),
         minWidth: 320,
-        flex: 1,
         sortable: false,
       },
       {
         field: "valid",
-        headerName: t("products.fields.valid.label"),
+        headerName: t("qrcodes.fields.valid.label"),
         minWidth: 136,
         display: "flex",
         renderCell: function render({ row }) {
-          return <ProductStatus value={row.isActive} />;
+          return <QRCodeStatus value={row.valid} />;
         },
       },
+      {
+        field: "url",
+        headerName: "URL",
+        minWidth: 250,
+        sortable: false,
+        renderCell: (params) => (
+          <a
+            href={params.value}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: "none", color: "#1976d2" }}
+          >
+            {params.value}
+          </a>
+        ),
+      },
+
       {
         field: "actions",
         headerName: t("table.actions"),
@@ -91,7 +131,7 @@ export const ProductListTable = (props: Props) => {
               }}
               onClick={() => {
                 return go({
-                  to: `${editUrl("products", row.id)}`,
+                  to: `${editUrl("qrcodes", row.id)}`,
                   query: {
                     to: pathname,
                   },
@@ -108,14 +148,31 @@ export const ProductListTable = (props: Props) => {
         },
       },
     ],
-    [t, props.categories, editUrl, go, pathname]
+    [t, editUrl, go, pathname]
   );
 
   return (
-    <DataGrid
-      {...props.dataGridProps}
-      columns={columns}
-      pageSizeOptions={[12, 24, 48, 96]}
-    />
+    <>
+      <DataGrid
+        {...dataGridProps}
+        columns={columns}
+        rows={rows}
+        pageSizeOptions={[10, 20, 30, 50]}
+      />
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogContent sx={{ textAlign: "center" }}>
+          {selectedImage ? (
+            <img
+              src={selectedImage}
+              alt="Expanded QR Code"
+              style={{ maxWidth: "100%", maxHeight: "80vh" }}
+            />
+          ) : (
+            <Typography>No image available</Typography>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };

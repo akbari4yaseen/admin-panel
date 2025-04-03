@@ -4,14 +4,14 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ClearIcon from "@mui/icons-material/Clear";
 import { useTheme } from "@mui/material/styles";
 import { green } from "@mui/material/colors";
-import type { IProduct } from "../../../interfaces";
+import type { IQRCode } from "../../../interfaces";
 
 type Props = {
-  value: IProduct["isActive"];
+  value: IQRCode["valid"];
   size?: ChipProps["size"];
 };
 
-export const ProductStatus = (props: Props) => {
+export const QRCodeStatus = (props: Props) => {
   const t = useTranslate();
   const { palette } = useTheme();
   const isDarkMode = palette.mode === "dark";
@@ -28,12 +28,12 @@ export const ProductStatus = (props: Props) => {
       }}
     />
   ) : (
-    <ClearIcon color="action" />
+    <ClearIcon color="error" />
   );
 
   return (
     <Chip
-      label={t(`products.fields.valid.${props.value}`)}
+      label={t(`qrcodes.fields.valid.${props.value}`)}
       icon={icon}
       variant="outlined"
       size={props?.size || "small"}

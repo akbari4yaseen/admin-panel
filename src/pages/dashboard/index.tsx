@@ -74,32 +74,6 @@ export const DashboardPage: React.FC = () => {
   });
   const dailyRevenue = dailyRevenueData?.data;
 
-  const { data: dailyOrdersData } = useCustom<{
-    data: IOrderChart[];
-    total: number;
-    trend: number;
-  }>({
-    url: `${API_URL}/dailyOrders`,
-    method: "get",
-    config: {
-      query: dateFilterQuery,
-    },
-  });
-  const dailyOrders = dailyOrdersData?.data;
-
-  const { data: newCustomersData } = useCustom<{
-    data: ISalesChart[];
-    total: number;
-    trend: number;
-  }>({
-    url: `${API_URL}/newCustomers`,
-    method: "get",
-    config: {
-      query: dateFilterQuery,
-    },
-  });
-  const newCustomers = newCustomersData?.data;
-
   return (
     <RefineListView
       headerButtons={() => (
@@ -167,7 +141,7 @@ export const DashboardPage: React.FC = () => {
               ),
             }}
           >
-            <DailyRevenue data={dailyRevenueData?.data.data || []} />
+            {/* <DailyRevenue data={dailyRevenueData?.data.data || []} /> */}
           </Card>
         </Grid>
       </Grid>

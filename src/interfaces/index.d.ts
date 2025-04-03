@@ -101,6 +101,15 @@ export interface IProduct {
   stock: number;
 }
 
+interface IQRCode {
+  id: number;
+  token: string;
+  url: string;
+  image: string;
+  valid: boolean;
+  created_at: string;
+}
+
 export interface ICategory {
   id: number;
   title: string;
