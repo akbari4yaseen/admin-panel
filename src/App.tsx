@@ -35,9 +35,6 @@ import { useAutoLoginForDemo } from "./hooks";
 
 import { dataProvider } from "./providers/data-provider";
 
-const QRCODES_API_URL = "http://localhost:8093/api/v1/qrcodes";
-const ADMIN_USERS_API_URL = "http://localhost:8094/api/v1/admin-users";
-
 const App: React.FC = () => {
   const { loading } = useAutoLoginForDemo();
   const { t, i18n } = useTranslation();
@@ -83,6 +80,7 @@ const App: React.FC = () => {
                 {
                   name: "qrcodes",
                   list: "/qrcodes",
+                  create: "/qrcodes/generate",
                   meta: {
                     label: "QR Codes",
                     icon: <QrCodeIcon />,

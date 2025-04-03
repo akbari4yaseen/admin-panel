@@ -1,9 +1,9 @@
 import Chip, { type ChipProps } from "@mui/material/Chip";
 import { useTranslate } from "@refinedev/core";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import ClearIcon from "@mui/icons-material/Clear";
+import CancelIcon from "@mui/icons-material/Cancel";
 import { useTheme } from "@mui/material/styles";
-import { green } from "@mui/material/colors";
+import { green, red } from "@mui/material/colors";
 import type { IQRCode } from "../../../interfaces";
 
 type Props = {
@@ -20,7 +20,9 @@ export const QRCodeStatus = (props: Props) => {
     ? isDarkMode
       ? green[200]
       : green[800]
-    : "default";
+    : isDarkMode
+    ? red[200]
+    : red[800];
   const icon: ChipProps["icon"] = props.value ? (
     <CheckCircleIcon
       sx={{
@@ -28,7 +30,11 @@ export const QRCodeStatus = (props: Props) => {
       }}
     />
   ) : (
-    <ClearIcon color="error" />
+    <CancelIcon
+      sx={{
+        fill: isDarkMode ? red[200] : red[600],
+      }}
+    />
   );
 
   return (

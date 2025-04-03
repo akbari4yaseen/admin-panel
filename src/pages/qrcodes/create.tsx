@@ -1,5 +1,5 @@
-import { ProductDrawerForm } from "../../components";
+import { QRcodeDrawerForm } from "../../components";
 
 export const ProductCreate = () => {
-  return <ProductDrawerForm action="create" />;
+  return <QRcodeDrawerForm action="create" />;
 };

@@ -11,7 +11,7 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { QRCodeStatus } from "../status";
 import { Dialog, DialogContent } from "@mui/material";
 
-export const ProductListTable = () => {
+export const QRcodeListTable = () => {
   const go = useGo();
   const { pathname } = useLocation();
   const { editUrl } = useNavigation();

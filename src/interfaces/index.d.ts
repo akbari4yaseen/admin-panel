@@ -168,15 +168,6 @@ export interface ITrendingProducts {
   orderCount: number;
 }
 
-export type IVehicle = {
-  model: string;
-  vehicleType: string;
-  engineSize: number;
-  color: string;
-  year: number;
-  id: number;
-};
-
 export type Nullable<T> = {
   [P in keyof T]: T[P] | null;
 };

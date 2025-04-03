@@ -3,8 +3,8 @@ import { useDataGrid, CreateButton } from "@refinedev/mui";
 
 import {
   RefineListView,
-  ProductListTable,
-  ProductListCard,
+  QRcodeListTable,
+  QRcodeListCard,
 } from "../../components";
 import { useTranslate, useGo, useNavigation } from "@refinedev/core";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
@@ -78,24 +78,15 @@ export const QRCodeList: React.FC<PropsWithChildren> = ({ children }) => {
             size="medium"
             sx={{ height: "40px" }}
             onClick={() => {
-              return go({
-                to: `${createUrl("qrcodes")}`,
-                query: {
-                  to: pathname,
-                },
-                options: {
-                  keepQuery: true,
-                },
-                type: "replace",
-              });
+              // open create drawer 
             }}
           >
             {t("qrcodes.actions.add")}
           </CreateButton>,
         ]}
       >
-        {view === "table" && <ProductListTable />}
-        {view === "card" && <ProductListCard {...dataGrid} />}
+        {view === "table" && <QRcodeListTable />}
+        {view === "card" && <QRcodeListCard {...dataGrid} />}
       </RefineListView>
       {children}
     </>

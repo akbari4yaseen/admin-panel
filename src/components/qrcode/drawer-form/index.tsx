@@ -29,7 +29,7 @@ type Props = {
   action: "create" | "edit";
 };
 
-export const ProductDrawerForm = (props: Props) => {
+export const QRcodeDrawerForm = (props: Props) => {
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();

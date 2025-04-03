@@ -1,5 +1,5 @@
 export * from "./customTooltip";
-export * from "./product";
+export * from "./qrcode";
 export * from "./header";
 export * from "./title";
 export * from "./card";

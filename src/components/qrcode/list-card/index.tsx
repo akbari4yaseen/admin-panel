@@ -21,7 +21,7 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 type Props = {} & UseDataGridReturnType<IQRCode>;
 
-export const ProductListCard = (props: Props) => {
+export const QRcodeListCard = (props: Props) => {
   const go = useGo();
   const { pathname } = useLocation();
   const { editUrl } = useNavigation();
@@ -184,7 +184,7 @@ export const ProductListCard = (props: Props) => {
         component="div"
         count={props.dataGridProps.rowCount}
         page={props.dataGridProps.paginationModel?.page || 0}
-        rowsPerPage={props.dataGridProps.paginationModel?.pageSize || 12}
+        rowsPerPage={props.dataGridProps.paginationModel?.pageSize || 10}
         rowsPerPageOptions={[10, 24, 48, 96]}
         onRowsPerPageChange={(e) => {
           props.setPageSize(+e.target.value);
