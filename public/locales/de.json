@@ -246,7 +246,6 @@
       "edit": "Kurier bearbeiten"
     }
   },
-
   "dashboard": {
     "title": "Panel",
     "overview": {
@@ -391,12 +390,12 @@
     },
     "fields": {
       "id": "ID",
-      "name": "Titel",
-      "description": "Bezeichnung",
-      "isActive": {
-        "label": "Aktiv",
-        "true": "Aktiv",
-        "false": "Passiv"
+      "token": "Token",
+      "url": "URL",
+      "valid": {
+        "label": "Valid",
+        "true": "Yes",
+        "false": "No"
       },
       "price": "Price",
       "category": "Kategorie",

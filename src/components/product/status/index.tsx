@@ -1,7 +1,7 @@
 import Chip, { type ChipProps } from "@mui/material/Chip";
 import { useTranslate } from "@refinedev/core";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
+import ClearIcon from "@mui/icons-material/Clear";
 import { useTheme } from "@mui/material/styles";
 import { green } from "@mui/material/colors";
 import type { IProduct } from "../../../interfaces";
@@ -28,12 +28,12 @@ export const ProductStatus = (props: Props) => {
       }}
     />
   ) : (
-    <BlockOutlinedIcon color="action" />
+    <ClearIcon color="action" />
   );
 
   return (
     <Chip
-      label={t(`products.fields.isActive.${props.value}`)}
+      label={t(`products.fields.valid.${props.value}`)}
       icon={icon}
       variant="outlined"
       size={props?.size || "small"}

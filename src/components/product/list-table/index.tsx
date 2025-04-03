@@ -55,57 +55,21 @@ export const ProductListTable = (props: Props) => {
         sortable: false,
       },
       {
-        field: "name",
-        headerName: t("products.fields.name"),
+        field: "token",
+        headerName: t("products.fields.token"),
         width: 200,
         sortable: false,
       },
       {
-        field: "description",
-        headerName: t("products.fields.description"),
+        field: "url",
+        headerName: t("products.fields.url"),
         minWidth: 320,
         flex: 1,
         sortable: false,
       },
       {
-        field: "price",
-        type: "number",
-        headerName: t("products.fields.price"),
-        width: 120,
-        sortable: false,
-        align: "right",
-        headerAlign: "right",
-        display: "flex",
-        renderCell: function render({ row }) {
-          return (
-            <NumberField
-              value={row.price}
-              options={{
-                currency: "USD",
-                style: "currency",
-              }}
-            />
-          );
-        },
-      },
-      {
-        field: "category.title",
-        headerName: t("products.fields.category"),
-        minWidth: 160,
-        sortable: false,
-        filterable: false,
-        display: "flex",
-        renderCell: function render({ row }) {
-          const category = props.categories.find(
-            (category) => category.id === row.category.id,
-          );
-
-          return <Typography>{category?.title}</Typography>;
-        },
-      },
-      {
-        field: "isActive",
-        headerName: t("products.fields.isActive.label"),
+        field: "valid",
+        headerName: t("products.fields.valid.label"),
         minWidth: 136,
         display: "flex",
         renderCell: function render({ row }) {
@@ -144,7 +108,7 @@ export const ProductListTable = (props: Props) => {
         },
       },
     ],
-    [t, props.categories, editUrl, go, pathname],
+    [t, props.categories, editUrl, go, pathname]
   );
 
   return (

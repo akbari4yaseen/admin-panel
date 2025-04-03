@@ -392,12 +392,12 @@
     },
     "fields": {
       "id": "ID",
-      "name": "Name",
-      "description": "Description",
-      "isActive": {
-        "label": "Status",
-        "true": "Available",
-        "false": "Unavailable"
+      "token": "Token",
+      "url": "URL",
+      "valid": {
+        "label": "Valid",
+        "true": "Yes",
+        "false": "No"
       },
       "price": "Price",
       "category": "Category",
@@ -441,8 +441,8 @@
       }
     },
     "actions": {
-      "add": "Add new product",
-      "edit": "Edit product"
+      "add": "Generate",
+      "edit": "Edit qr code"
     }
   },
   "reviews": {
