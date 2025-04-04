@@ -407,7 +407,7 @@
         "description": "Upload Image",
         "validation": "must be 1080x1080 px"
       },
-      "createdAt": "CreatedAt"
+      "createdAt": "Created At"
     },
     "success": {
       "generate": "QRcodes generated successfully"
@@ -446,7 +446,8 @@
     },
     "actions": {
       "add": "Generate",
-      "edit": "Edit qr code"
+      "edit": "Edit qr code",
+      "details": "QR Code Details"
     }
   },
   "reviews": {

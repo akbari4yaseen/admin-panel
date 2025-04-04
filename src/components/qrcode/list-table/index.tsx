@@ -7,18 +7,21 @@ import Avatar from "@mui/material/Avatar";
 import type { IQRCode } from "../../../interfaces";
 import { useLocation } from "react-router";
 import IconButton from "@mui/material/IconButton";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import VisibilityOutlined from "@mui/icons-material/VisibilityOutlined";
 import { QRCodeStatus } from "../status";
 import { Dialog, DialogContent } from "@mui/material";
+import { QRcodeShowDrawer } from "../show";
 
 export const QRcodeListTable = () => {
   const go = useGo();
   const { pathname } = useLocation();
-  const { editUrl } = useNavigation();
+  const { show } = useNavigation();
   const t = useTranslate();
 
   const [open, setOpen] = useState<boolean>(false);
+  const [openShowDrawer, setOpenShowDrawer] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedRow, setSelectedRow] = useState<IQRCode | null>(null);
 
   // Fetching data using useDataGrid with proper pagination and queryOptions
   const { dataGridProps } = useDataGrid<IQRCode>({
@@ -46,6 +49,16 @@ export const QRcodeListTable = () => {
   const handleClose = () => {
     setOpen(false);
     setSelectedImage(null);
+  };
+
+  const handleShowRow = (row: IQRCode) => {
+    setSelectedRow(row);
+    setOpenShowDrawer(true);
+  };
+
+  const handleCloseShowDrawer = () => {
+    setOpenShowDrawer(false);
+    setSelectedRow(null);
   };
 
   const columns = useMemo<GridColDef<IQRCode>[]>(
@@ -119,7 +132,7 @@ export const QRcodeListTable = () => {
       {
         field: "actions",
         headerName: t("table.actions"),
-        width: 80,
+        type: "actions",
         align: "center",
         headerAlign: "center",
         display: "flex",
@@ -127,28 +140,17 @@ export const QRcodeListTable = () => {
           return (
             <IconButton
               sx={{
-                color: "text.secondary",
+                cursor: "pointer",
               }}
-              onClick={() => {
-                return go({
-                  to: `${editUrl("qrcodes", row.id)}`,
-                  query: {
-                    to: pathname,
-                  },
-                  options: {
-                    keepQuery: true,
-                  },
-                  type: "replace",
-                });
-              }}
+              onClick={() => handleShowRow(row)}
             >
-              <EditOutlinedIcon />
+              <VisibilityOutlined color="action" />
             </IconButton>
           );
         },
       },
     ],
-    [t, editUrl, go, pathname]
+    [t]
   );
 
   return (
@@ -173,6 +175,12 @@ export const QRcodeListTable = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      <QRcodeShowDrawer
+        open={openShowDrawer}
+        onClose={handleCloseShowDrawer}
+        record={selectedRow}
+      />
     </>
   );
 };

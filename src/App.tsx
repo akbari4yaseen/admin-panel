@@ -81,6 +81,7 @@ const App: React.FC = () => {
                   name: "qrcodes",
                   list: "/qrcodes",
                   create: "/qrcodes/generates",
+                  // show: "/qrcodes/:id",
                   meta: {
                     label: "QR Codes",
                     icon: <QrCodeIcon />,

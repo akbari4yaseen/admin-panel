@@ -89,12 +89,13 @@ export const QRCodeList: React.FC<PropsWithChildren> = ({ children }) => {
         {view === "table" && <QRcodeListTable />}
         {view === "card" && <QRcodeListCard {...dataGrid} />}
       </RefineListView>
-      {/* Create Drawer */}
+
       <QRcodeDrawerForm
         open={createDrawerOpen}
         action="create"
         onClose={() => setCreateDrawerOpen(false)}
       />
+
       {children}
     </>
   );

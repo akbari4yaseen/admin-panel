@@ -3,7 +3,7 @@ import { useTranslate } from "@refinedev/core";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useTheme } from "@mui/material/styles";
-import { green, red } from "@mui/material/colors";
+import { green } from "@mui/material/colors";
 import type { IQRCode } from "../../../interfaces";
 
 type Props = {
@@ -20,9 +20,7 @@ export const QRCodeStatus = (props: Props) => {
     ? isDarkMode
       ? green[200]
       : green[800]
-    : isDarkMode
-    ? red[200]
-    : red[800];
+    : "default";
   const icon: ChipProps["icon"] = props.value ? (
     <CheckCircleIcon
       sx={{
@@ -30,11 +28,7 @@ export const QRCodeStatus = (props: Props) => {
       }}
     />
   ) : (
-    <CancelIcon
-      sx={{
-        fill: isDarkMode ? red[200] : red[600],
-      }}
-    />
+    <CancelIcon color="action" />
   );
 
   return (
