@@ -89,7 +89,7 @@
     "undo": "Undo",
     "import": "Import",
     "export": "Export",
-    "clone": "Clone",
+    "invalidate": "Invalidate",
     "accept": "Accept",
     "acceptAll": "Accept All",
     "reject": "Reject",
@@ -97,7 +97,9 @@
     "nextStep": "Next",
     "previousStep": "Prev",
     "generate": "Generate",
-    "generating": "Generating..."
+    "generating": "Generating...",
+    "deleteing": "Deleting...",
+    "invalidateing": "Invalidating..."
   },
   "loading": "Loading",
   "tags": {
