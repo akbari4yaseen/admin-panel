@@ -6,6 +6,7 @@ import {
   useTranslate,
   useNotification,
 } from "@refinedev/core";
+import { useState } from "react";
 import { DeleteButton } from "@refinedev/mui";
 import { useSearchParams } from "react-router";
 import { useForm } from "@refinedev/react-hook-form";
@@ -17,6 +18,7 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import { Drawer, DrawerHeader } from "../../../components";
 import { axiosInstance } from "../../../utils";
+import CircularProgress from "@mui/material/CircularProgress";
 
 type Props = {
   action: "create" | "edit";
@@ -30,7 +32,8 @@ export const QRcodeDrawerForm = ({ action, open, onClose }: Props) => {
   const go = useGo();
   const t = useTranslate();
   const apiUrl = useApiUrl();
-  const notification = useNotification(); // Ensure we have the notification object
+  const notification = useNotification();
+  const [loading, setLoading] = useState(false);
 
   const onDrawerClose = () => {
     onClose();
@@ -56,7 +59,6 @@ export const QRcodeDrawerForm = ({ action, open, onClose }: Props) => {
     handleSubmit,
     formState: { errors },
     refineCore: { id, formLoading },
-    saveButtonProps,
   } = useForm({
     defaultValues: {
       count: 1,
@@ -75,6 +77,7 @@ export const QRcodeDrawerForm = ({ action, open, onClose }: Props) => {
     const countData = {
       count: parseInt(count.toString()),
     };
+    setLoading(true);
     try {
       const response = await axiosInstance.post(
         `${apiUrl}/generates`,
@@ -88,13 +91,15 @@ export const QRcodeDrawerForm = ({ action, open, onClose }: Props) => {
 
       onDrawerClose();
     } catch (error) {
-      console.error("Error:", error); // Debugging line
+      console.error("Error:", error);
 
       notification?.open?.({
         type: "error",
         message:
           error instanceof Error ? error.message : "Something went wrong",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -108,7 +113,7 @@ export const QRcodeDrawerForm = ({ action, open, onClose }: Props) => {
       <DrawerHeader
         title={
           action === "create"
-            ? t("qrcodes.actions.create")
+            ? t("qrcodes.actions.add")
             : t("qrcodes.actions.edit")
         }
         onCloseClick={onDrawerClose}
@@ -167,8 +172,15 @@ export const QRcodeDrawerForm = ({ action, open, onClose }: Props) => {
               onSuccess={onDrawerClose}
             />
           )}
-          <Button type="submit" variant="contained">
-            {t("buttons.generate")}
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={loading}
+            startIcon={
+              loading ? <CircularProgress size={20} color="inherit" /> : null
+            }
+          >
+            {loading ? t("buttons.generating") : t("buttons.generate")}
           </Button>
         </Stack>
       </form>

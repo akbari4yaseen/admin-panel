@@ -95,7 +95,9 @@
     "reject": "Reject",
     "rejectAll": "Reject All",
     "nextStep": "Next",
-    "previousStep": "Prev"
+    "previousStep": "Prev",
+    "generate": "Generate",
+    "generating": "Generating..."
   },
   "loading": "Loading",
   "tags": {
@@ -399,14 +401,16 @@
         "true": "Yes",
         "false": "No"
       },
-      "price": "Price",
-      "category": "Category",
+      "count": "Number of QRcodes",
       "images": {
         "label": "Image",
         "description": "Upload Image",
         "validation": "must be 1080x1080 px"
       },
       "createdAt": "CreatedAt"
+    },
+    "success": {
+      "generate": "QRcodes generated successfully"
     },
     "filter": {
       "title": "Filters",
@@ -433,11 +437,11 @@
       "createdAt": {
         "label": "Created At"
       },
-      "isActive": {
+      "valid": {
         "label": "Status",
         "placeholder": "Select Status",
-        "true": "Available",
-        "false": "Unavailable"
+        "true": "Yes",
+        "false": "No"
       }
     },
     "actions": {
