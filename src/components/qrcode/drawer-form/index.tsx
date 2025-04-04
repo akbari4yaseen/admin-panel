@@ -1,24 +1,26 @@
+import { useState, useCallback, useMemo } from "react";
+import { useSearchParams } from "react-router";
 import {
-  type HttpError,
   useApiUrl,
   useGetToPath,
   useGo,
-  useTranslate,
   useNotification,
+  useTranslate,
 } from "@refinedev/core";
-import { useState } from "react";
-import { DeleteButton } from "@refinedev/mui";
-import { useSearchParams } from "react-router";
 import { useForm } from "@refinedev/react-hook-form";
+import { DeleteButton } from "@refinedev/mui";
 import { Controller } from "react-hook-form";
-import Button from "@mui/material/Button";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
+import {
+  Button,
+  CircularProgress,
+  FormControl,
+  Paper,
+  Stack,
+  TextField,
+} from "@mui/material";
+
 import { Drawer, DrawerHeader } from "../../../components";
 import { axiosInstance } from "../../../utils";
-import CircularProgress from "@mui/material/CircularProgress";
 
 type Props = {
   action: "create" | "edit";
@@ -27,32 +29,14 @@ type Props = {
 };
 
 export const QRcodeDrawerForm = ({ action, open, onClose }: Props) => {
+  const t = useTranslate();
+  const go = useGo();
+  const apiUrl = useApiUrl();
+  const notify = useNotification();
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
-  const go = useGo();
-  const t = useTranslate();
-  const apiUrl = useApiUrl();
-  const notification = useNotification();
-  const [loading, setLoading] = useState(false);
 
-  const onDrawerClose = () => {
-    onClose();
-    go({
-      to:
-        searchParams.get("to") ??
-        getToPath({
-          action: "list",
-        }) ??
-        "",
-      query: {
-        to: undefined,
-      },
-      options: {
-        keepQuery: true,
-      },
-      type: "replace",
-    });
-  };
+  const [loading, setLoading] = useState(false);
 
   const {
     control,
@@ -60,43 +44,45 @@ export const QRcodeDrawerForm = ({ action, open, onClose }: Props) => {
     formState: { errors },
     refineCore: { id, formLoading },
   } = useForm({
-    defaultValues: {
-      count: 1,
-    },
+    defaultValues: { count: 1 },
     refineCoreProps: {
       resource: "qrcodes",
       redirect: false,
-      onMutationSuccess: () => {
-        onDrawerClose();
-      },
+      onMutationSuccess: () => onDrawerClose(),
     },
   });
 
-  // API call function
+  const navigationTarget = useMemo(() => {
+    return searchParams.get("to") ?? getToPath({ action: "list" }) ?? "";
+  }, [searchParams, getToPath]);
+
+  const onDrawerClose = useCallback(() => {
+    onClose();
+    go({
+      to: navigationTarget,
+      query: { to: undefined },
+      options: { keepQuery: true },
+      type: "replace",
+    });
+  }, [go, onClose, navigationTarget]);
+
   const handleGenerate = async ({ count }: { count: number }) => {
-    const countData = {
-      count: parseInt(count.toString()),
-    };
     setLoading(true);
     try {
-      const response = await axiosInstance.post(
-        `${apiUrl}/generates`,
-        countData
-      );
+      await axiosInstance.post(`${apiUrl}/generates`, {
+        count: Number(count),
+      });
 
-      notification?.open?.({
+      notify?.open?.({
         type: "success",
         message: t("qrcodes.success.generate"),
       });
 
       onDrawerClose();
     } catch (error) {
-      console.error("Error:", error);
-
-      notification?.open?.({
+      notify?.open?.({
         type: "error",
-        message:
-          error instanceof Error ? error.message : "Something went wrong",
+        message: error instanceof Error ? error.message : t("errors.generic"),
       });
     } finally {
       setLoading(false);
@@ -105,10 +91,10 @@ export const QRcodeDrawerForm = ({ action, open, onClose }: Props) => {
 
   return (
     <Drawer
-      PaperProps={{ sx: { width: { sm: "100%", md: "416px" } } }}
       open={open}
       anchor="right"
       onClose={onDrawerClose}
+      PaperProps={{ sx: { width: { sm: "100%", md: "416px" } } }}
     >
       <DrawerHeader
         title={
@@ -119,13 +105,12 @@ export const QRcodeDrawerForm = ({ action, open, onClose }: Props) => {
         onCloseClick={onDrawerClose}
       />
       <form onSubmit={handleSubmit(handleGenerate)}>
-        <Paper sx={{ marginTop: "32px" }}>
-          <Stack padding="24px" spacing="24px">
+        <Paper sx={{ mt: 4 }}>
+          <Stack p={3} spacing={3}>
             <FormControl fullWidth>
               <Controller
                 control={control}
                 name="count"
-                defaultValue={1}
                 rules={{
                   required: t("errors.required.field", { field: "Count" }),
                   min: {
@@ -141,13 +126,10 @@ export const QRcodeDrawerForm = ({ action, open, onClose }: Props) => {
                   <TextField
                     {...field}
                     type="number"
-                    variant="outlined"
                     id="count"
+                    variant="outlined"
                     label={t("qrcodes.fields.count")}
-                    inputProps={{
-                      min: 1,
-                      max: 100,
-                    }}
+                    inputProps={{ min: 1, max: 100 }}
                     error={!!errors.count}
                     helperText={errors.count?.message}
                   />
@@ -156,14 +138,11 @@ export const QRcodeDrawerForm = ({ action, open, onClose }: Props) => {
             </FormControl>
           </Stack>
         </Paper>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          padding="16px 24px"
-        >
+        <Stack direction="row" justifyContent="space-between" p={2}>
           <Button variant="text" color="inherit" onClick={onDrawerClose}>
             {t("buttons.cancel")}
           </Button>
+
           {action === "edit" && id && (
             <DeleteButton
               resource="qrcodes"
@@ -172,6 +151,7 @@ export const QRcodeDrawerForm = ({ action, open, onClose }: Props) => {
               onSuccess={onDrawerClose}
             />
           )}
+
           <Button
             type="submit"
             variant="contained"
