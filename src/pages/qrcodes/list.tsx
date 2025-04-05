@@ -14,15 +14,6 @@ import BorderAllOutlinedIcon from "@mui/icons-material/BorderAllOutlined";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 
-interface IQRCode {
-  id: number;
-  token: string;
-  url: string;
-  image: string;
-  valid: boolean;
-  created_at: string;
-}
-
 type View = "table" | "card";
 
 export const QRCodeList: React.FC<PropsWithChildren> = ({ children }) => {

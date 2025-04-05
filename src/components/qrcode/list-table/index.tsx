@@ -155,7 +155,7 @@ export const QRcodeListTable = () => {
         {...dataGridProps}
         columns={columns}
         rows={rows}
-        pageSizeOptions={[12, 24, 36, 48]}
+        pageSizeOptions={[12, 24, 36, 48, 96]}
       />
 
       <Dialog open={open} onClose={handleClose}>

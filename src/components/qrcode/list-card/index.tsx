@@ -114,7 +114,7 @@ export const QRcodeListCard = () => {
         count={rowCount || 0}
         page={paginationModel?.page || 0}
         rowsPerPage={paginationModel?.pageSize || 12}
-        rowsPerPageOptions={[12, 24, 36, 48]}
+        rowsPerPageOptions={[12, 24, 36, 48, 96]}
         onRowsPerPageChange={(e) => setPageSize(+e.target.value)}
         onPageChange={(_e, page) => setCurrent(page + 1)}
         aria-label="QR Code Pagination"
