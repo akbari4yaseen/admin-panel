@@ -14,7 +14,10 @@ import LinkIcon from "@mui/icons-material/Link";
 import QrCodeIcon from "@mui/icons-material/QrCode";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import { axiosInstance } from "../../../utils";
-import { useCallback, useState } from "react";
+import React, { useCallback, useState, useRef } from "react";
+import { useReactToPrint } from "react-to-print";
+import PrintIcon from "@mui/icons-material/Print";
+import { ForwardedPrintData } from "./PrintData";
 
 type QRcodeShowDrawerProps = {
   open: boolean;
@@ -22,14 +25,28 @@ type QRcodeShowDrawerProps = {
   record: IQRCode | null;
 };
 
-export const QRcodeShowDrawer = ({ open, onClose, record }: QRcodeShowDrawerProps) => {
+export const QRcodeShowDrawer = ({
+  open,
+  onClose,
+  record,
+}: QRcodeShowDrawerProps) => {
   const apiUrl = useApiUrl();
   const t = useTranslate();
   const notify = useNotification();
 
-  const [loading, setLoading] = useState<{ delete: boolean; invalidate: boolean }>({
+  const [loading, setLoading] = useState<{
+    delete: boolean;
+    invalidate: boolean;
+  }>({
     delete: false,
     invalidate: false,
+  });
+
+  const printRef = useRef<HTMLDivElement>(null);
+
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+    documentTitle: `QRCode_${record?.id}`,
   });
 
   const handleAction = useCallback(
@@ -37,8 +54,12 @@ export const QRcodeShowDrawer = ({ open, onClose, record }: QRcodeShowDrawerProp
       if (!record) return;
 
       setLoading((prev) => ({ ...prev, [action]: true }));
-      const url = action === "delete" ? `${apiUrl}/qr/${record.token}` : `${apiUrl}/invalidate/${record.token}`;
-      const method = action === "delete" ? axiosInstance.delete : axiosInstance.post;
+      const url =
+        action === "delete"
+          ? `${apiUrl}/qr/${record.token}`
+          : `${apiUrl}/invalidate/${record.token}`;
+      const method =
+        action === "delete" ? axiosInstance.delete : axiosInstance.post;
 
       try {
         await method(url);
@@ -48,7 +69,8 @@ export const QRcodeShowDrawer = ({ open, onClose, record }: QRcodeShowDrawerProp
         });
         onClose(); // Close the drawer
       } catch (error: any) {
-        const errorMessage = error?.response?.data?.message || t(`notifications.${action}Error`);
+        const errorMessage =
+          error?.response?.data?.message || t(`notifications.${action}Error`);
         notify?.open?.({
           type: "error",
           message: errorMessage,
@@ -64,7 +86,11 @@ export const QRcodeShowDrawer = ({ open, onClose, record }: QRcodeShowDrawerProp
     return <Typography>{t("qrcodes.noRecord")}</Typography>;
   }
 
-  const renderButton = (action: "delete" | "invalidate", labelKey: string, Icon: JSX.Element) => {
+  const renderButton = (
+    action: "delete" | "invalidate",
+    labelKey: string,
+    Icon: JSX.Element
+  ) => {
     const isLoading = loading[action];
     return (
       <Button
@@ -165,6 +191,7 @@ export const QRcodeShowDrawer = ({ open, onClose, record }: QRcodeShowDrawerProp
               </Stack>
             </Stack>
           </Paper>
+
           <Stack
             direction="row"
             justifyContent="space-between"
@@ -172,9 +199,20 @@ export const QRcodeShowDrawer = ({ open, onClose, record }: QRcodeShowDrawerProp
           >
             {renderButton("delete", "delete", <DeleteIcon />)}
             {renderButton("invalidate", "invalidate", <BlockIcon />)}
+            <Button
+              variant="contained"
+              startIcon={<PrintIcon />}
+              onClick={() => handlePrint()}
+            >
+              {t("buttons.print")}
+            </Button>
           </Stack>
         </Stack>
       </>
+
+      <div style={{ display: "none" }}>
+        <ForwardedPrintData ref={printRef} data={record.image} />
+      </div>
     </Drawer>
   );
 };
