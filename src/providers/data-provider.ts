@@ -220,9 +220,9 @@ interface ApiEndpoints {
 const API_ENDPOINTS: ApiEndpoints = {
   qrcodes:
     import.meta.env.VITE_QRCODE_API_URL ||
-    "116.203.82.82:8093/api/v1/qrcodes",
+    "http://116.203.82.82:8093/api/v1/qrcodes",
   users:
-    import.meta.env.VITE_USER_API_URL || "116.203.82.82:8093/api/v1/users",
+    import.meta.env.VITE_USER_API_URL || "http://116.203.82.82:8093/api/v1/users",
 };
 
 export const qrCodesDataProvider = createDataProvider(API_ENDPOINTS.qrcodes);
