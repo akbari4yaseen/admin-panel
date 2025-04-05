@@ -1,5 +1,5 @@
 import React, { type PropsWithChildren, useState } from "react";
-import { useDataGrid, CreateButton } from "@refinedev/mui";
+import { CreateButton } from "@refinedev/mui";
 
 import {
   RefineListView,
@@ -35,13 +35,6 @@ export const QRCodeList: React.FC<PropsWithChildren> = ({ children }) => {
 
   const { replace } = useNavigation();
   const t = useTranslate();
-
-  const dataGrid = useDataGrid<IQRCode>({
-    resource: "qrcodes",
-    pagination: {
-      pageSize: 10,
-    },
-  });
 
   const handleViewChange = (
     _e: React.MouseEvent<HTMLElement>,
@@ -84,7 +77,7 @@ export const QRCodeList: React.FC<PropsWithChildren> = ({ children }) => {
         ]}
       >
         {view === "table" && <QRcodeListTable />}
-        {view === "card" && <QRcodeListCard {...dataGrid} />}
+        {view === "card" && <QRcodeListCard />}
       </RefineListView>
 
       <QRcodeDrawerForm
