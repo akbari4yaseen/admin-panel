@@ -1,11 +1,10 @@
 import { useMemo, useState } from "react";
-import { useGo, useNavigation, useTranslate } from "@refinedev/core";
+import { useTranslate } from "@refinedev/core";
 import { useDataGrid } from "@refinedev/mui";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import type { IQRCode } from "../../../interfaces";
-import { useLocation } from "react-router";
 import IconButton from "@mui/material/IconButton";
 import VisibilityOutlined from "@mui/icons-material/VisibilityOutlined";
 import { QRCodeStatus } from "../status";
@@ -13,9 +12,6 @@ import { Dialog, DialogContent } from "@mui/material";
 import { QRcodeShowDrawer } from "../show";
 
 export const QRcodeListTable = () => {
-  const go = useGo();
-  const { pathname } = useLocation();
-  const { show } = useNavigation();
   const t = useTranslate();
 
   const [open, setOpen] = useState<boolean>(false);
@@ -159,7 +155,7 @@ export const QRcodeListTable = () => {
         {...dataGridProps}
         columns={columns}
         rows={rows}
-        pageSizeOptions={[10, 20, 30, 50]}
+        pageSizeOptions={[12, 24, 36, 48]}
       />
 
       <Dialog open={open} onClose={handleClose}>

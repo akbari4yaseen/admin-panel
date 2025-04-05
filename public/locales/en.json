@@ -91,6 +91,7 @@
     "import": "Import",
     "export": "Export",
     "invalidate": "Invalidate",
+    "validate": "Validate",
     "accept": "Accept",
     "acceptAll": "Accept All",
     "reject": "Reject",
@@ -100,7 +101,8 @@
     "generate": "Generate",
     "generating": "Generating...",
     "deleteing": "Deleting...",
-    "invalidateing": "Invalidating..."
+    "invalidateing": "Invalidating...",
+    "validateing": "Validating..."
   },
   "loading": "Loading",
   "tags": {
@@ -121,6 +123,8 @@
   "warnWhenUnsavedChanges": "Are you sure you want to leave? You have unsaved changes.",
   "notifications": {
     "success": "Successful",
+    "invalidateSuccess": "The selected QR Code successfully invalidated",
+    "validateSuccess": "The selected QR Code successfully validated",
     "error": "Error (status code: {{statusCode}})",
     "undoable": "You have {{seconds}} seconds to undo",
     "createSuccess": "Successfully created {{resource}}",
@@ -150,6 +154,7 @@
   },
   "qrcodes": {
     "qrcodes": "QRcodes",
+    "valid": "Valid",
     "titles": {
       "list": "QR Codes",
       "create": "Create QR code",

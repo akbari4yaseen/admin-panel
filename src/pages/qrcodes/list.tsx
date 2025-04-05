@@ -7,10 +7,10 @@ import {
   QRcodeListCard,
   QRcodeDrawerForm,
 } from "../../components";
-import { useTranslate, useGo, useNavigation } from "@refinedev/core";
+import { useTranslate, useNavigation } from "@refinedev/core";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
 import BorderAllOutlinedIcon from "@mui/icons-material/BorderAllOutlined";
-import { useLocation } from "react-router";
+
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 
@@ -33,10 +33,7 @@ export const QRCodeList: React.FC<PropsWithChildren> = ({ children }) => {
 
   const [createDrawerOpen, setCreateDrawerOpen] = useState(false);
 
-  const go = useGo();
   const { replace } = useNavigation();
-  const { pathname } = useLocation();
-  const { createUrl } = useNavigation();
   const t = useTranslate();
 
   const dataGrid = useDataGrid<IQRCode>({

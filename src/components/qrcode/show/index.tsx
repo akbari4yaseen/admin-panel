@@ -25,6 +25,40 @@ type QRcodeShowDrawerProps = {
   record: IQRCode | null;
 };
 
+const ActionButton = ({
+  action,
+  labelKey,
+  isLoading,
+  handleAction,
+  Icon,
+  translate,
+}: {
+  action: "delete" | "invalidate" | "validate";
+  labelKey: string;
+  isLoading: boolean;
+  handleAction: () => void;
+  Icon: JSX.Element;
+  translate: (key: string) => string;
+}) => (
+  <Button
+    color={
+      action === "delete"
+        ? "error"
+        : action === "validate"
+        ? "success"
+        : "warning"
+    }
+    variant="contained"
+    startIcon={isLoading ? <CircularProgress size={24} /> : Icon}
+    onClick={handleAction}
+    disabled={isLoading}
+  >
+    {isLoading
+      ? translate(`buttons.${labelKey}ing`)
+      : translate(`buttons.${labelKey}`)}
+  </Button>
+);
+
 export const QRcodeShowDrawer = ({
   open,
   onClose,
@@ -34,12 +68,10 @@ export const QRcodeShowDrawer = ({
   const t = useTranslate();
   const notify = useNotification();
 
-  const [loading, setLoading] = useState<{
-    delete: boolean;
-    invalidate: boolean;
-  }>({
+  const [loading, setLoading] = useState({
     delete: false,
     invalidate: false,
+    validate: false,
   });
 
   const printRef = useRef<HTMLDivElement>(null);
@@ -50,16 +82,25 @@ export const QRcodeShowDrawer = ({
   });
 
   const handleAction = useCallback(
-    async (action: "delete" | "invalidate") => {
+    async (action: "delete" | "invalidate" | "validate") => {
       if (!record) return;
 
       setLoading((prev) => ({ ...prev, [action]: true }));
-      const url =
-        action === "delete"
-          ? `${apiUrl}/qr/${record.token}`
-          : `${apiUrl}/invalidate/${record.token}`;
-      const method =
-        action === "delete" ? axiosInstance.delete : axiosInstance.post;
+      let url, method;
+
+      switch (action) {
+        case "delete":
+          url = `${apiUrl}/qr/${record.token}`;
+          method = axiosInstance.delete;
+          break;
+        case "invalidate":
+        case "validate":
+          url = `${apiUrl}/${action}/${record.token}`;
+          method = axiosInstance.post;
+          break;
+        default:
+          return;
+      }
 
       try {
         await method(url);
@@ -83,27 +124,8 @@ export const QRcodeShowDrawer = ({
   );
 
   if (!record) {
-    return <Typography>{t("qrcodes.noRecord")}</Typography>;
+    return;
   }
-
-  const renderButton = (
-    action: "delete" | "invalidate",
-    labelKey: string,
-    Icon: JSX.Element
-  ) => {
-    const isLoading = loading[action];
-    return (
-      <Button
-        color={action === "delete" ? "error" : "warning"}
-        variant="contained"
-        startIcon={isLoading ? <CircularProgress size={24} /> : Icon}
-        onClick={() => handleAction(action)}
-        disabled={isLoading}
-      >
-        {isLoading ? t(`buttons.${labelKey}ing`) : t(`buttons.${labelKey}`)}
-      </Button>
-    );
-  };
 
   return (
     <Drawer
@@ -120,7 +142,6 @@ export const QRcodeShowDrawer = ({
         <Stack spacing="24px" padding="24px 24px 42px 24px">
           <Paper>
             <Stack spacing={3} padding="24px">
-              {/* QR Image */}
               <Box sx={{ textAlign: "center" }}>
                 <img
                   src={record.image}
@@ -132,7 +153,6 @@ export const QRcodeShowDrawer = ({
                 />
               </Box>
 
-              {/* Token */}
               <Stack direction="row" alignItems="center" spacing={2}>
                 <QrCodeIcon color="primary" />
                 <Box>
@@ -143,7 +163,6 @@ export const QRcodeShowDrawer = ({
                 </Box>
               </Stack>
 
-              {/* Valid */}
               <Stack direction="row" alignItems="center" spacing={2}>
                 <VerifiedIcon color="primary" />
                 <Typography variant="subtitle2" color="text.secondary">
@@ -152,7 +171,6 @@ export const QRcodeShowDrawer = ({
                 <QRCodeStatus value={record.valid} />
               </Stack>
 
-              {/* URL */}
               <Stack direction="row" alignItems="center" spacing={2}>
                 <LinkIcon color="primary" />
                 <Box>
@@ -178,7 +196,6 @@ export const QRcodeShowDrawer = ({
 
               <Divider />
 
-              {/* Created At */}
               <Stack direction="row" alignItems="center" spacing={2}>
                 <AccessTimeIcon color="primary" />
                 <Typography variant="subtitle2">
@@ -186,7 +203,7 @@ export const QRcodeShowDrawer = ({
                 </Typography>
                 <DateField
                   value={record?.created_at}
-                  format="MMMM, YYYY / HH:mm A"
+                  format="MMMM D, YYYY / HH:mm A"
                 />
               </Stack>
             </Stack>
@@ -197,8 +214,24 @@ export const QRcodeShowDrawer = ({
             justifyContent="space-between"
             padding="16px 24px"
           >
-            {renderButton("delete", "delete", <DeleteIcon />)}
-            {renderButton("invalidate", "invalidate", <BlockIcon />)}
+            <ActionButton
+              action="delete"
+              labelKey="delete"
+              isLoading={loading.delete}
+              handleAction={() => handleAction("delete")}
+              Icon={<DeleteIcon />}
+              translate={t}
+            />
+            <ActionButton
+              action={record.valid ? "invalidate" : "validate"}
+              labelKey={record.valid ? "invalidate" : "validate"}
+              isLoading={loading.invalidate || loading.validate}
+              handleAction={() =>
+                handleAction(record.valid ? "invalidate" : "validate")
+              }
+              Icon={record.valid ? <BlockIcon /> : <VerifiedIcon />}
+              translate={t}
+            />
             <Button
               variant="contained"
               startIcon={<PrintIcon />}
