@@ -28,12 +28,6 @@ export const QRcodeListCard = () => {
     resource: "qrcodes",
     dataProviderName: "qrcodes",
     pagination: { pageSize: 12 }, // Ensuring pagination is set up
-    queryOptions: {
-      select: (data) => ({
-        data: data.data?.qrcodes ?? [], // Default to empty array if no data
-        total: data.data?.total ?? 0, // Default total count to 0
-      }),
-    },
   });
 
   const { rows, paginationModel, rowCount } = dataGridProps;

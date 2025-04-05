@@ -19,17 +19,10 @@ export const QRcodeListTable = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedRow, setSelectedRow] = useState<IQRCode | null>(null);
 
-  // Fetching data using useDataGrid with proper pagination and queryOptions
   const { dataGridProps } = useDataGrid<IQRCode>({
     resource: "qrcodes",
     dataProviderName: "qrcodes",
-    pagination: { pageSize: 10 }, // Ensuring pagination is set up
-    queryOptions: {
-      select: (data) => ({
-        data: data.data?.qrcodes ?? [], // Default to empty array if no data
-        total: data.data?.total ?? 0, // Default total count to 0
-      }),
-    },
+    pagination: { pageSize: 12 },
   });
 
   // Ensure rows are always an array

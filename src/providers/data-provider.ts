@@ -47,15 +47,24 @@ const createDataProvider = (
       ? `${url}?${stringify(combinedQuery)}`
       : url;
 
-    const { data, headers } = await httpClient[requestMethod](urlWithQuery, {
-      headers: headersFromMeta,
+    const { data: json } = await httpClient[requestMethod](urlWithQuery, {
+      headers: meta?.headers,
     });
 
-    const total = +headers["x-total-count"];
+    const items: any[] = Array.isArray(json)
+      ? json
+      : Array.isArray((json as any)[resource])
+      ? (json as any)[resource]
+      : [];
+
+    const totalCount =
+      typeof (json as any).total === "number"
+        ? (json as any).total
+        : items.length;
 
     return {
-      data,
-      total: total || data.length,
+      data: items,
+      total: totalCount,
     };
   },
 
